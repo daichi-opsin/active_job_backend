@@ -1,0 +1,28 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: root
+    ports:
+      - "3376:3306"
+    volumes:
+      - ./tmp/db:/var/lib/mysql
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3070:3000"
+    depends_on:
+      - db
+
+  redis:
+    image: redis:7.2.1
+    command: redis-server --appendonly yes
+    ports:
+      - "3080:6379"

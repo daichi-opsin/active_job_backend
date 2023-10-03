@@ -1,24 +1,15 @@
-# README
+## delayed jobの起動
+```
+docker-compose exec -it web rails jobs:work
+```
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## sidekiqの起動
+```
+docker-compose exec -it web bundle exec sidekiq -c 1
+```
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## resqueの起動
+```
+docker-compose exec -it -e "QUEUE=*" web rails resque:work
+docker-compose exec -it -e "QUEUE=*" -e "COUNT=2" web rails resque:workers
+```
